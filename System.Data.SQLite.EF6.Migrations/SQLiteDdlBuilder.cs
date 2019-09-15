@@ -5,8 +5,9 @@ using System.Text;
 
 namespace System.Data.SQLite.EF6.Migrations
 {
-    class SQLiteDdlBuilder
+    class SQLiteDdlBuilder : ISQLiteDdlBuilder
     {
+        
         private readonly StringBuilder _stringBuilder = new StringBuilder();
 
         public string GetCommandText()

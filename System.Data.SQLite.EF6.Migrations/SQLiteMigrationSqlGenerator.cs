@@ -18,11 +18,23 @@ namespace System.Data.SQLite.EF6.Migrations
 
         const string BATCHTERMINATOR = ";\r\n";
 
+        private ISQLiteDdlBuilderFactory _sqliteDdlBuilderFactory;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SQLiteMigrationSqlGenerator"/> class with the default <see cref="SQLiteDdlBuilderFactory"/>.
+        /// </summary>
+        public SQLiteMigrationSqlGenerator()
+            : this(new SQLiteDdlBuilderFactory())
+        { }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SQLiteMigrationSqlGenerator"/> class.
         /// </summary>
-        public SQLiteMigrationSqlGenerator()
+        /// <param name="sqliteDdlBuilderFactory">a factory that is able to create instances of <see cref="ISQLiteDdlBuilder"/></param>
+        public SQLiteMigrationSqlGenerator(ISQLiteDdlBuilderFactory sqliteDdlBuilderFactory)
         {
+            _sqliteDdlBuilderFactory = sqliteDdlBuilderFactory;
+
             base.ProviderManifest = ((DbProviderServices)(new SQLiteProviderFactory()).GetService(typeof(DbProviderServices))).GetProviderManifest("");
         }
 
@@ -68,7 +80,7 @@ namespace System.Data.SQLite.EF6.Migrations
 
         private string GenerateSqlStatementConcrete(HistoryOperation migrationOperation)
         {
-            SQLiteDdlBuilder ddlBuilder = new SQLiteDdlBuilder();
+            ISQLiteDdlBuilder ddlBuilder = _sqliteDdlBuilderFactory.GetSQLiteDdlBuilder();
 
             foreach (DbModificationCommandTree commandTree in migrationOperation.CommandTrees)
             {
@@ -155,7 +167,7 @@ namespace System.Data.SQLite.EF6.Migrations
 
         private string GenerateSqlStatementConcrete(RenameTableOperation migrationOperation)
         {
-            SQLiteDdlBuilder ddlBuilder = new SQLiteDdlBuilder();
+            ISQLiteDdlBuilder ddlBuilder = _sqliteDdlBuilderFactory.GetSQLiteDdlBuilder();
 
             ddlBuilder.AppendSql("ALTER TABLE ");
             ddlBuilder.AppendIdentifier(migrationOperation.Name);
@@ -170,7 +182,7 @@ namespace System.Data.SQLite.EF6.Migrations
         #region Columns
         private string GenerateSqlStatementConcrete(AddColumnOperation migrationOperation)
         {
-            SQLiteDdlBuilder ddlBuilder = new SQLiteDdlBuilder();
+            ISQLiteDdlBuilder ddlBuilder = _sqliteDdlBuilderFactory.GetSQLiteDdlBuilder();
 
             ddlBuilder.AppendSql("ALTER TABLE ");
             ddlBuilder.AppendIdentifier(migrationOperation.Table);
@@ -225,7 +237,7 @@ namespace System.Data.SQLite.EF6.Migrations
         {
             // Actually primary key creation is supported only during table creation
 
-            SQLiteDdlBuilder ddlBuilder = new SQLiteDdlBuilder();
+            ISQLiteDdlBuilder ddlBuilder = _sqliteDdlBuilderFactory.GetSQLiteDdlBuilder();
             ddlBuilder.AppendSql(" PRIMARY KEY (");
             ddlBuilder.AppendIdentifierList(migrationOperation.Columns);
             ddlBuilder.AppendSql(")");
@@ -249,7 +261,7 @@ namespace System.Data.SQLite.EF6.Migrations
 
         private string GenerateSqlStatementConcrete(CreateTableOperation migrationOperation)
         {
-            SQLiteDdlBuilder ddlBuilder = new SQLiteDdlBuilder();
+            ISQLiteDdlBuilder ddlBuilder = _sqliteDdlBuilderFactory.GetSQLiteDdlBuilder();
 
             ddlBuilder.AppendSql("CREATE TABLE ");
             ddlBuilder.AppendIdentifier(migrationOperation.Name);
@@ -302,7 +314,7 @@ namespace System.Data.SQLite.EF6.Migrations
 
         private string GenerateSqlStatementConcrete(CreateIndexOperation migrationOperation)
         {
-            SQLiteDdlBuilder ddlBuilder = new SQLiteDdlBuilder();
+            ISQLiteDdlBuilder ddlBuilder = _sqliteDdlBuilderFactory.GetSQLiteDdlBuilder();
             ddlBuilder.AppendSql("CREATE ");
             if (migrationOperation.IsUnique)
                 ddlBuilder.AppendSql("UNIQUE ");
@@ -323,7 +335,7 @@ namespace System.Data.SQLite.EF6.Migrations
 
         private string GenerateSqlStatementConcrete(DropForeignKeyOperation migrationOperation)
         {
-            SQLiteDdlBuilder ddlBuilder = new SQLiteDdlBuilder();
+            ISQLiteDdlBuilder ddlBuilder = _sqliteDdlBuilderFactory.GetSQLiteDdlBuilder();
             ddlBuilder.AppendSql("ALTER TABLE ");
             ddlBuilder.AppendIdentifier(migrationOperation.PrincipalTable);
             ddlBuilder.AppendSql(" DROP CONSTRAINT ");
@@ -334,7 +346,7 @@ namespace System.Data.SQLite.EF6.Migrations
 
         private string GenerateSqlStatementConcrete(DropPrimaryKeyOperation migrationOperation)
         {
-            SQLiteDdlBuilder ddlBuilder = new SQLiteDdlBuilder();
+            ISQLiteDdlBuilder ddlBuilder = _sqliteDdlBuilderFactory.GetSQLiteDdlBuilder();
             ddlBuilder.AppendSql("ALTER TABLE ");
             ddlBuilder.AppendIdentifier(migrationOperation.Table);
             ddlBuilder.AppendSql(" DROP CONSTRAINT ");
@@ -344,7 +356,7 @@ namespace System.Data.SQLite.EF6.Migrations
 
         private string GenerateSqlStatementConcrete(DropIndexOperation migrationOperation)
         {
-            SQLiteDdlBuilder ddlBuilder = new SQLiteDdlBuilder();
+            ISQLiteDdlBuilder ddlBuilder = _sqliteDdlBuilderFactory.GetSQLiteDdlBuilder();
             ddlBuilder.AppendSql("DROP INDEX ");
             ddlBuilder.AppendIdentifier(SQLiteProviderManifestHelper.GetFullIdentifierName(migrationOperation.Table, migrationOperation.Name));
             ddlBuilder.AppendSql(" ON ");
@@ -354,7 +366,7 @@ namespace System.Data.SQLite.EF6.Migrations
 
         private string GenerateSqlStatementConcrete(DropTableOperation migrationOperation)
         {
-            SQLiteDdlBuilder ddlBuilder = new SQLiteDdlBuilder();
+            ISQLiteDdlBuilder ddlBuilder = _sqliteDdlBuilderFactory.GetSQLiteDdlBuilder();
             ddlBuilder.AppendSql("DROP TABLE ");
             ddlBuilder.AppendIdentifier(migrationOperation.Name);
             return ddlBuilder.GetCommandText();
