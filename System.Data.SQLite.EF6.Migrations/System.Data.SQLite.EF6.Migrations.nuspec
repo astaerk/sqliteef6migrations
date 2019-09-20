@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>SQLite.EF6.Migrations-Extensible</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>Bubi,astaerk</authors>
+    <owners>$author$</owners>
+    <licenseUrl>https://github.com/astaerk/sqliteef6migrations/blob/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/astaerk/sqliteef6migrations</projectUrl>
+    <!--<iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>-->
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>
+      Entity framework 6.x migration provider for SQLite - This is a more extensible copy of https://www.nuget.org/packages/System.Data.SQLite.EF6.Migrations/
+      For more details see https://github.com/astaerk/sqliteef6migrations
+    </description>
+    <releaseNotes>This is a fork of $version$ of https://www.nuget.org/packages/System.Data.SQLite.EF6.Migrations/ that supports changing/replacing of the SQLiteDdlBuilder class.</releaseNotes>
+    <copyright>Copyright 2019</copyright>
+    <tags>EntityFramework Migration SQLite</tags>
+  </metadata>
+</package>
