@@ -15,7 +15,7 @@
       For more details see https://github.com/astaerk/sqliteef6migrations
     </description>
     <releaseNotes>This is a fork of $version$ of https://www.nuget.org/packages/System.Data.SQLite.EF6.Migrations/ that supports changing/replacing of the SQLiteDdlBuilder class.</releaseNotes>
-    <copyright>Copyright 2019</copyright>
+    <copyright>Copyright 2020</copyright>
     <tags>EntityFramework Migration SQLite</tags>
   </metadata>
 </package>
