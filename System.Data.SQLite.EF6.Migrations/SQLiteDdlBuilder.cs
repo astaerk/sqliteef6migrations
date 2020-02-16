@@ -5,23 +5,24 @@ using System.Text;
 
 namespace System.Data.SQLite.EF6.Migrations
 {
-    class SQLiteDdlBuilder
+    public class SQLiteDdlBuilder : ISQLiteDdlBuilder
     {
-        private readonly StringBuilder _stringBuilder = new StringBuilder();
+        
+        protected readonly StringBuilder _stringBuilder = new StringBuilder();
 
-        public string GetCommandText()
+        public virtual string GetCommandText()
         {
             return _stringBuilder.ToString();
         }
 
 
-        public void AppendStringLiteral(string literalValue)
+        public virtual void AppendStringLiteral(string literalValue)
         {
             AppendSql("'" + literalValue.Replace("'", "''") + "'");
         }
 
 
-        public void AppendIdentifier(string identifier)
+        public virtual void AppendIdentifier(string identifier)
         {
             string correctIdentifier;
 
@@ -38,7 +39,7 @@ namespace System.Data.SQLite.EF6.Migrations
         }
 
 
-        public void AppendIdentifierList(IEnumerable<string> identifiers)
+        public virtual void AppendIdentifierList(IEnumerable<string> identifiers)
         {
             bool first = true;
             foreach (var identifier in identifiers)
@@ -51,12 +52,12 @@ namespace System.Data.SQLite.EF6.Migrations
             }
         }
 
-        public void AppendType(EdmProperty column)
+        public virtual void AppendType(EdmProperty column)
         {
             AppendType(column.TypeUsage, column.Nullable, column.TypeUsage.GetIsIdentity());
         }
 
-        public void AppendType(TypeUsage typeUsage, bool isNullable, bool isIdentity)
+        public virtual void AppendType(TypeUsage typeUsage, bool isNullable, bool isIdentity)
         {
 
             bool isTimestamp = false;
@@ -99,7 +100,7 @@ namespace System.Data.SQLite.EF6.Migrations
         /// Appends raw SQL into the string builder.
         /// </summary>
         /// <param name="text">Raw SQL string to append into the string builder.</param>
-        public void AppendSql(string text)
+        public virtual void AppendSql(string text)
         {
             _stringBuilder.Append(text);
         }
@@ -109,7 +110,7 @@ namespace System.Data.SQLite.EF6.Migrations
         /// </summary>
         /// <param name="format">The format.</param>
         /// <param name="p">The p.</param>
-        public void AppendSql(string format, params object[] p)
+        public virtual void AppendSql(string format, params object[] p)
         {
             _stringBuilder.AppendFormat(format, p);
         }
@@ -118,13 +119,13 @@ namespace System.Data.SQLite.EF6.Migrations
         /// <summary>
         /// Appends new line for visual formatting or for ending a comment.
         /// </summary>
-        public void AppendNewLine()
+        public virtual void AppendNewLine()
         {
             _stringBuilder.Append("\r\n");
         }
 
 
-        public string CreateConstraintName(string constraint, string objectName)
+        public virtual string CreateConstraintName(string constraint, string objectName)
         {
             objectName = SQLiteProviderManifestHelper.RemoveDbo(objectName);
 
@@ -140,7 +141,7 @@ namespace System.Data.SQLite.EF6.Migrations
         }
 
         // Returns an eigth nibbles string
-        protected string GetRandomString()
+        protected virtual string GetRandomString()
         {
             Random random = new Random();
             string randomValue = "";
