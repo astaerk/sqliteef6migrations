@@ -16,9 +16,9 @@ namespace System.Data.SQLite.EF6.Migrations
     public class SQLiteMigrationSqlGenerator : MigrationSqlGenerator
     {
 
-        const string BATCHTERMINATOR = ";\r\n";
+        protected const string BATCHTERMINATOR = ";\r\n";
 
-        private ISQLiteDdlBuilderFactory _sqliteDdlBuilderFactory;
+        protected ISQLiteDdlBuilderFactory _sqliteDdlBuilderFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SQLiteMigrationSqlGenerator"/> class with the default <see cref="SQLiteDdlBuilderFactory"/>.
@@ -55,7 +55,7 @@ namespace System.Data.SQLite.EF6.Migrations
             return migrationStatements;
         }
 
-        private MigrationStatement GenerateStatement(MigrationOperation migrationOperation)
+        protected virtual MigrationStatement GenerateStatement(MigrationOperation migrationOperation)
         {
             MigrationStatement migrationStatement = new MigrationStatement();
             migrationStatement.BatchTerminator = BATCHTERMINATOR;
@@ -78,7 +78,7 @@ namespace System.Data.SQLite.EF6.Migrations
 
         #region History operations
 
-        private string GenerateSqlStatementConcrete(HistoryOperation migrationOperation)
+        protected virtual string GenerateSqlStatementConcrete(HistoryOperation migrationOperation)
         {
             ISQLiteDdlBuilder ddlBuilder = _sqliteDdlBuilderFactory.GetSQLiteDdlBuilder();
 
@@ -113,12 +113,12 @@ namespace System.Data.SQLite.EF6.Migrations
 
         #region Move operations (not supported by Jet)
 
-        private string GenerateSqlStatementConcrete(MoveProcedureOperation migrationOperation)
+        protected virtual string GenerateSqlStatementConcrete(MoveProcedureOperation migrationOperation)
         {
             throw new NotSupportedException("Move operations not supported by SQLite");
         }
 
-        private string GenerateSqlStatementConcrete(MoveTableOperation migrationOperation)
+        protected virtual string GenerateSqlStatementConcrete(MoveTableOperation migrationOperation)
         {
             throw new NotSupportedException("Move operations not supported by SQLite");
         }
@@ -127,24 +127,24 @@ namespace System.Data.SQLite.EF6.Migrations
 
 
         #region Procedure related operations (not supported by Jet)
-        private string GenerateSqlStatementConcrete(AlterProcedureOperation migrationOperation)
+        protected virtual string GenerateSqlStatementConcrete(AlterProcedureOperation migrationOperation)
         {
             throw new NotSupportedException("Procedures are not supported by SQLite");
         }
 
-        private string GenerateSqlStatementConcrete(CreateProcedureOperation migrationOperation)
-        {
-            throw new NotSupportedException("Procedures are not supported by SQLite");
-        }
-
-
-        private string GenerateSqlStatementConcrete(DropProcedureOperation migrationOperation)
+        protected virtual string GenerateSqlStatementConcrete(CreateProcedureOperation migrationOperation)
         {
             throw new NotSupportedException("Procedures are not supported by SQLite");
         }
 
 
-        private string GenerateSqlStatementConcrete(RenameProcedureOperation migrationOperation)
+        protected virtual string GenerateSqlStatementConcrete(DropProcedureOperation migrationOperation)
+        {
+            throw new NotSupportedException("Procedures are not supported by SQLite");
+        }
+
+
+        protected virtual string GenerateSqlStatementConcrete(RenameProcedureOperation migrationOperation)
         {
             throw new NotSupportedException("Procedures are not supported by SQLite");
         }
@@ -155,17 +155,17 @@ namespace System.Data.SQLite.EF6.Migrations
         #region Rename operations
 
 
-        private string GenerateSqlStatementConcrete(RenameColumnOperation migrationOperation)
+        protected virtual string GenerateSqlStatementConcrete(RenameColumnOperation migrationOperation)
         {
             throw new NotSupportedException("Cannot rename objects with Jet");
         }
 
-        private string GenerateSqlStatementConcrete(RenameIndexOperation migrationOperation)
+        protected virtual string GenerateSqlStatementConcrete(RenameIndexOperation migrationOperation)
         {
             throw new NotSupportedException("Cannot rename objects with Jet");
         }
 
-        private string GenerateSqlStatementConcrete(RenameTableOperation migrationOperation)
+        protected virtual string GenerateSqlStatementConcrete(RenameTableOperation migrationOperation)
         {
             ISQLiteDdlBuilder ddlBuilder = _sqliteDdlBuilderFactory.GetSQLiteDdlBuilder();
 
@@ -180,7 +180,7 @@ namespace System.Data.SQLite.EF6.Migrations
         #endregion
 
         #region Columns
-        private string GenerateSqlStatementConcrete(AddColumnOperation migrationOperation)
+        protected virtual string GenerateSqlStatementConcrete(AddColumnOperation migrationOperation)
         {
             ISQLiteDdlBuilder ddlBuilder = _sqliteDdlBuilderFactory.GetSQLiteDdlBuilder();
 
@@ -200,12 +200,12 @@ namespace System.Data.SQLite.EF6.Migrations
             return ddlBuilder.GetCommandText();
         }
 
-        private string GenerateSqlStatementConcrete(DropColumnOperation migrationOperation)
+        protected virtual string GenerateSqlStatementConcrete(DropColumnOperation migrationOperation)
         {
             throw new NotSupportedException("Drop column not supported by SQLite");
         }
 
-        private string GenerateSqlStatementConcrete(AlterColumnOperation migrationOperation)
+        protected virtual string GenerateSqlStatementConcrete(AlterColumnOperation migrationOperation)
         {
             throw new NotSupportedException("Alter column not supported by SQLite");
         }
@@ -215,7 +215,7 @@ namespace System.Data.SQLite.EF6.Migrations
 
         #region Foreign keys creation
 
-        private string GenerateSqlStatementConcrete(AddForeignKeyOperation migrationOperation)
+        protected virtual string GenerateSqlStatementConcrete(AddForeignKeyOperation migrationOperation)
         {
 
             /* 
@@ -233,7 +233,7 @@ namespace System.Data.SQLite.EF6.Migrations
 
         #region Primary keys creation
 
-        private string GenerateSqlStatementConcrete(AddPrimaryKeyOperation migrationOperation)
+        protected virtual string GenerateSqlStatementConcrete(AddPrimaryKeyOperation migrationOperation)
         {
             // Actually primary key creation is supported only during table creation
 
@@ -248,7 +248,7 @@ namespace System.Data.SQLite.EF6.Migrations
 
         #region Table operations
 
-        private string GenerateSqlStatementConcrete(AlterTableOperation migrationOperation)
+        protected virtual string GenerateSqlStatementConcrete(AlterTableOperation migrationOperation)
         {
             /* 
              * SQLite does not support alter table
@@ -259,7 +259,7 @@ namespace System.Data.SQLite.EF6.Migrations
 
         }
 
-        private string GenerateSqlStatementConcrete(CreateTableOperation migrationOperation)
+        protected virtual string GenerateSqlStatementConcrete(CreateTableOperation migrationOperation)
         {
             ISQLiteDdlBuilder ddlBuilder = _sqliteDdlBuilderFactory.GetSQLiteDdlBuilder();
 
@@ -312,7 +312,7 @@ namespace System.Data.SQLite.EF6.Migrations
 
         #region Index
 
-        private string GenerateSqlStatementConcrete(CreateIndexOperation migrationOperation)
+        protected virtual string GenerateSqlStatementConcrete(CreateIndexOperation migrationOperation)
         {
             ISQLiteDdlBuilder ddlBuilder = _sqliteDdlBuilderFactory.GetSQLiteDdlBuilder();
             ddlBuilder.AppendSql("CREATE ");
@@ -333,7 +333,7 @@ namespace System.Data.SQLite.EF6.Migrations
 
         #region Drop
 
-        private string GenerateSqlStatementConcrete(DropForeignKeyOperation migrationOperation)
+        protected virtual string GenerateSqlStatementConcrete(DropForeignKeyOperation migrationOperation)
         {
             ISQLiteDdlBuilder ddlBuilder = _sqliteDdlBuilderFactory.GetSQLiteDdlBuilder();
             ddlBuilder.AppendSql("ALTER TABLE ");
@@ -344,7 +344,7 @@ namespace System.Data.SQLite.EF6.Migrations
 
         }
 
-        private string GenerateSqlStatementConcrete(DropPrimaryKeyOperation migrationOperation)
+        protected virtual string GenerateSqlStatementConcrete(DropPrimaryKeyOperation migrationOperation)
         {
             ISQLiteDdlBuilder ddlBuilder = _sqliteDdlBuilderFactory.GetSQLiteDdlBuilder();
             ddlBuilder.AppendSql("ALTER TABLE ");
@@ -354,7 +354,7 @@ namespace System.Data.SQLite.EF6.Migrations
             return ddlBuilder.GetCommandText();
         }
 
-        private string GenerateSqlStatementConcrete(DropIndexOperation migrationOperation)
+        protected virtual string GenerateSqlStatementConcrete(DropIndexOperation migrationOperation)
         {
             ISQLiteDdlBuilder ddlBuilder = _sqliteDdlBuilderFactory.GetSQLiteDdlBuilder();
             ddlBuilder.AppendSql("DROP INDEX ");
@@ -364,7 +364,7 @@ namespace System.Data.SQLite.EF6.Migrations
             return ddlBuilder.GetCommandText();
         }
 
-        private string GenerateSqlStatementConcrete(DropTableOperation migrationOperation)
+        protected virtual string GenerateSqlStatementConcrete(DropTableOperation migrationOperation)
         {
             ISQLiteDdlBuilder ddlBuilder = _sqliteDdlBuilderFactory.GetSQLiteDdlBuilder();
             ddlBuilder.AppendSql("DROP TABLE ");
