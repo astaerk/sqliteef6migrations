@@ -14,7 +14,15 @@
       Entity framework 6.x migration provider for SQLite - This is a more extensible copy of https://www.nuget.org/packages/System.Data.SQLite.EF6.Migrations/
       For more details see https://github.com/astaerk/sqliteef6migrations
     </description>
-    <releaseNotes>This is a fork of $version$ of https://www.nuget.org/packages/System.Data.SQLite.EF6.Migrations/ that supports changing/replacing of the SQLiteDdlBuilder class.</releaseNotes>
+    <releaseNotes>
+      This is a fork of 1.0.106 of https://www.nuget.org/packages/System.Data.SQLite.EF6.Migrations/ that is more extensible.
+
+      Version 1.0.106.0
+      - supports changing/replacing of the SQLiteDdlBuilder class
+
+      Version 1.0.106.1
+      - most members of the SQLiteMigrationSqlGenerator class are protected and virtual now to better support inheriting that class
+    </releaseNotes>
     <copyright>Copyright 2020</copyright>
     <tags>EntityFramework Migration SQLite</tags>
   </metadata>
